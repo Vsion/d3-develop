@@ -2,9 +2,40 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>d3-develop</title>
+  <title>d3-develop_index</title>
+  <link rel="stylesheet" href="src/css/index.css">
+  <script src="src/js/jquery.min.js"></script>
+  <script src="src/js/d3.v4.js"></script>
 </head>
 <body>
-
+  <svg width="960" height="600"></svg>
+  <script>
+    var opt = {
+      "nodes": [
+        { id: "1", group: 1, img: "./src/img/国干网络.png", title: "国干网络"},
+        { id: "2", group: 1, img: "./src/img/国际.png", title: "国际"},
+        { id: "3", group: 1, img: "./src/img/地市cmnet.png", title: "地市cmnet"},
+        { id: "4", group: 1, img: "./src/img/城市地域网.png", title: "城市地域网"},
+        { id: "5", group: 2, img: "./src/img/省网核心.png", title: "省网核心", size: 2},
+        { id: "6", group: 2, img: "./src/img/cdn.png", title: "cdn"},
+        { id: "7", group: 2, img: "./src/img/idc.png", title: "idc"},
+        { id: "8", group: 2, img: "./src/img/联通电信.png", title: "联通电信"},
+        { id: "9", group: 2, img: "./src/img/铁通.png", title: "铁通"},
+      ],
+      "links": [
+        { source: "1", target: "2", width: 10, color:"dde300"},
+        { source: "1", target: "8", width: 10},
+        { source: "1", target: "5", width: 5},
+        { source: "1", target: "9", width: 5},
+        { source: "5", target: "9", width: 10},
+        { source: "7", target: "5", width: 5},
+        { source: "5", target: "6", width: 5},
+        { source: "4", target: "5", width: 5},
+        { source: "3", target: "5", width: 5},
+        { source: "5", target: "8", width: 5},
+      ]
+    }
+  </script>
+  <script src="src/js/index.js"></script>
 </body>
 </html>
