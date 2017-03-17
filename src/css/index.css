@@ -27,3 +27,12 @@
         stroke-dashoffset: 0;
     }
 }
+.container{
+  position: relative;
+}
+.container #hintImg{
+  position: absolute;
+  display: none;
+  height: 70px;
+  cursor: pointer;
+}

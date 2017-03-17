@@ -1,6 +1,7 @@
 var d3_develop = (function(self, opt){
   self.size = 1;
   self.baseSize = opt.baseSize || 80;
+  self.container = opt.container;
   opt = setDefaultOpt(opt);
   function setDefaultOpt(opt){
     opt.nodes.forEach(function(d){
@@ -14,7 +15,8 @@ var d3_develop = (function(self, opt){
   }
 
   self.init = function(){
-    var svg = d3.select("svg"),
+    setImg();
+    var svg = d3.select(self.container + " svg"),
         width = +svg.attr("width"),
         height = +svg.attr("height");
 
@@ -22,7 +24,7 @@ var d3_develop = (function(self, opt){
 
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
-        .force("charge", d3.forceManyBody().strength(-1500 * self.size))
+        .force("charge", d3.forceManyBody().strength(-2000 * self.size))
         .force("center", d3.forceCenter(width / 2, height / 2));
 
 
@@ -36,8 +38,10 @@ var d3_develop = (function(self, opt){
         })
         .attr("stroke-width", function(l) { return l.width; })
         .attr("style", function(l) { return "stroke: #" + (l.color || "999"); })
-        .on("mouseenter", function(){
-          d3.event.clientX
+        .on("mouseenter", function(l){
+          $(self.container + " img#hintImg")
+          .attr("style", "display: block; top: " + (d3.event.clientY) + "px; left: " + (d3.event.clientX) + "px;" )
+          .attr("data-id", l.id);
         });
 
     var zoom = d3.zoom()
@@ -59,6 +63,9 @@ var d3_develop = (function(self, opt){
         .attr("height", function(d){ return getSize(d) })
         .on("click", function(d, i, doms){
 
+        })
+        .on("mouseenter", function(){
+          $(self.container + " img#hintImg").hide();
         })
         //.call(zoom);
         // .call(d3.drag()
@@ -112,6 +119,18 @@ var d3_develop = (function(self, opt){
       var scale = d3.event.transform.k;
       var imgs = $(ele).parent().find("image");
       imgs.attr("transform", "scale(" + scale + "," + scale + ")");
+    }
+    function setImg(){
+      var img = new Image()
+      img.src = "src/img/hintimg.png";
+      img.id="hintImg";
+      $(self.container).append(img);
+      $(img).on("click", function(){
+        //window.location.href = "test.html";
+        var id = $(this).attr("data-id");
+        console.log();
+        window.location.href = "topology.html?id=" + id;
+      });
     }
   }
 
