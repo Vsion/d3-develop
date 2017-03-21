@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>拓扑图</title>
+  <title>topology-force</title>
 
-  <link rel="stylesheet" href="src/css/topology.css">
+  <link rel="stylesheet" href="src/css/topology-echarts.css">
+  <link rel="stylesheet" href="src/css/topology-force.css">
+  <script src="src/js/echarts.min.js"></script>
   <script src="src/js/jquery.min.js"></script>
   <script src="src/js/d3.v4.js"></script>
 </head>
@@ -12,6 +14,7 @@
   <div class="container">
     <svg width="960" height="700"></svg>
   </div>
+  <div id="chart-panel"></div>
   <script>
     var opt = {
       container: ".container",
@@ -47,6 +50,7 @@
       ]
     }
   </script>
-  <script src="src/js/topology.js"></script>
+  <script src="src/js/topology-force.js"></script>
+  <script src="src/js/topology-chart.js"></script>
 </body>
 </html>

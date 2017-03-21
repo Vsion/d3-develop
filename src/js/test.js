@@ -23,7 +23,7 @@ var topology = (function(self, opt){
     var root = stratify(data)
         .sort(function(a, b) { return (a.height - b.height) || a.id.localeCompare(b.id); });
 
-    tree(root);///这里!!!!
+    tree(root);
 
     var link = g.selectAll(".link")
         .data(root.descendants().slice(1))
