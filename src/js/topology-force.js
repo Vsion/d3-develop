@@ -23,10 +23,9 @@ var d3_develop = (function(self, opt){
 
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
-        .force("charge", d3.forceManyBody().strength(-2000 * self.size))
+        .force("charge", d3.forceManyBody().strength(-4000 * self.size))
         .force("center", d3.forceCenter(width / 2, height / 2));
 
-        //test.js todo
     self.link = svg.append("g")
         .attr("class","links")
         .selectAll("path")
@@ -34,14 +33,18 @@ var d3_develop = (function(self, opt){
         .enter()
         .append("path")
         .attr("class", "link")
-
-        .attr("stroke-width", function(l) { return l.width; })
-        .attr("style", function(l) { return "stroke: #" + (l.color || "999"); })
+        .attr("style", function(l) { var color = !!l.color ? "stroke: #" + (l.color || "999") + "; " : ""; return color + "stroke-width:" + l.width + "px"; })
         .on("mouseenter", function(l){
-          $(self.container + " img#hintImg")
-          .attr("style", "display: block; top: " + (d3.event.clientY) + "px; left: " + (d3.event.clientX) + "px;" )
-          .attr("data-id", l.id);
-        });
+          // $(self.container + " img#hintImg")
+          // .attr("style", "display: block; top: " + (d3.event.clientY) + "px; left: " + (d3.event.clientX) + "px;" )
+          // .attr("data-id", l.id);
+        })
+        .on("click", function(l){
+          setOpt(getOpt());
+        })
+
+    self.link.append("title")
+        .text(function(l){ return l.id; });
 
     self.node = svg.append("g")
         .attr("class", "nodes")
@@ -78,8 +81,6 @@ var d3_develop = (function(self, opt){
     function ticked() {
       self.node
           .attr("x", function(d) {
-            // console.log(d.id + ": " +d.x);
-            // console.log(d.id + ": " +(d.x*1 - d.size*self.baseSize/2));
             return d.x*1 - d.size*self.baseSize/2;
           })
           .attr("y", function(d) {
@@ -88,31 +89,13 @@ var d3_develop = (function(self, opt){
 
       self.link
           .attr("x1", function(d) {
-            // console.log(d.source.id + ": " +d.source.x);
             return d.source.x*1;
           })
           .attr("y1", function(d) { return d.source.y*1; })
           .attr("x2", function(d) { return d.target.x*1; })
           .attr("y2", function(d) { return d.target.y*1; })
           .attr("d", function(d){
-            // debugger
-            return "M100 100 A300,30 0 0,1 100,150 "
-            // return "M" + d.target.y + "," + d.target.x
-            //     + "Q" + d.source.y + "," + d.source.x
-            //     + " " + ((d.source.x + d.target.x)/2) + "," + ((d.source.y+d.target.y)/2)
-            // return "M" + d.target.y + "," + d.target.x
-            //     + "C" + d.source.y + "," + d.source.x
-            //     + " " + d.source.y + "," + d.target.x
-            //     + " " + d.target.y + "," + d.target.x
-            // return "M" + d.source.y + "," + d.source.x
-            //     + "C" + (d.target.y + 100) + "," + d.source.x
-            //     + " " + (d.target.y + 100) + "," + d.target.x
-            //     + " " + d.target.y + "," + d.target.x
-
-            // return "M" + (d.source.y+d.source.vy) + "," + (d.source.x+d.source.vx)
-            //     + "C" + (d.target.y+d.target.vy + 100) + "," + (d.source.x+d.source.vx)
-            //     + " " + (d.target.y+d.target.vy + 100) + "," + (d.target.x+d.target.vx)
-            //     + " " + (d.target.y+d.target.vy) + "," + (d.target.x+d.target.vx)
+            return getPath(d);
           }).attr("lid", function(l){
             return l.id + ": " + l.source.id + ", " + l.target.id
           });
@@ -122,6 +105,41 @@ var d3_develop = (function(self, opt){
   function getSize(d){
     var size = (d.size || 1) * self.baseSize;
     return size + "px";
+  }
+  function getOffsetXY(linkNum){
+    // var redu = linkNum % 2 ? 1 : -1
+    return 13 * linkNum// * redu;
+  }
+  function getOffset(linkNum){
+    var redu = linkNum % 2 ? 1 : -1
+    return 13 * linkNum * redu;
+  }
+  function getX(linkNum){
+    return linkNum % 2 ? 1 : 0
+  }
+  function getPath(d){
+    var tx =  d.target.x// - d.target.size*self.baseSize/2
+    var ty =  d.target.y// - d.target.size*self.baseSize/2
+    var sx =  d.source.x// - d.source.size*self.baseSize/2
+    var sy =  d.source.y// - d.source.size*self.baseSize/2
+    var resStr = "", num = d.linkNum;
+    if(num == 1){
+      resStr = "M" + tx + "," + ty
+        + "L" + sx + "," + sy
+    }else{
+      resStr = "M" + sx + " "+ sy +" A"+getOffsetXY(d.linkNum||1)+","+getOffsetXY(d.linkNum||1)+" 0 0,"+getX(d.linkNum||1)+" " +tx+"," +ty;
+    }
+
+    // if(num != 1 ){
+    //   resStr =  "M" + tx + "," + ty
+    //     + "C" + (tx + getOffset(d.linkNum||1)) + "," + sy
+    //     + " " + (sx + getOffset(d.linkNum||1)) + "," + sy
+    //     + " " + sx + "," + sy
+    // }else{
+    //   resStr = "M" + tx + "," + ty
+    //     + "L" + sx + "," + sy
+    // }
+    return resStr;
   }
   return self;
 })({}, opt)

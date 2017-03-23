@@ -129,7 +129,7 @@ var d3_develop = (function(self, opt){
         //window.location.href = "test.html";
         var id = $(this).attr("data-id");
         console.log();
-        window.location.href = "topology.html?id=" + id;
+        window.location.href = "topology-force.html?id=" + id;
       });
     }
   }

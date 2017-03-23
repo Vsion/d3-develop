@@ -5,13 +5,14 @@
   }
   .link {
     stroke-width: 3px;
-    stroke: steelblue;
+    stroke: lightcoral;
     fill: none;
     /*stroke-dasharray:40;*/
     stroke-dashoffset:400;
     -webkit-animation: 'draw' 10s linear infinite;
     animation: 'draw' 10s linear infinite;
     stroke-linejoin:bevel;
+    cursor: pointer;
   }
 
   @-webkit-keyframes draw {
@@ -21,4 +22,19 @@
       100% {
           stroke-dashoffset: 0;
       }
+  }
+  .test{
+    position: absolute;
+    height: 50px;
+    width: 50px;
+    background-color: red;
+    display: none;
+  }
+  .container{
+    position: absolute;
+    top: -150px;
+  }
+  #chart-panel{
+    position: relative;
+    top: 630px
   }
