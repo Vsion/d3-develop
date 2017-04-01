@@ -22,11 +22,20 @@ var d3_develop = (function(self, opt){
 
     var color = d3.scaleOrdinal(d3.schemeCategory20);
 
+    // var attractForce = d3.forceManyBody().strength(200).distanceMax(400*1).distanceMin(60*1);
+    // var repelForce = d3.forceManyBody().strength(-140).distanceMax(50*1).distanceMin(10*1);
+
     var simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id(function(d) { return d.id; }))
-        .force("charge", d3.forceManyBody().strength(-2000 * self.size))
-        .force("center", d3.forceCenter(width / 2, height / 2));
+        .force("charge", d3.forceManyBody().strength(-2000 * self.size).distanceMin(100).distanceMax(500))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        // .force("attractForce",attractForce).force("repelForce",repelForce);;
 
+    // opt.nodes.forEach(function(o){
+    //   o.x = width / 2;
+    //   o.y = height / 2;
+    //   return o;
+    // });
 
     var link = svg.append("g")
         .attr("class","links")
@@ -39,8 +48,9 @@ var d3_develop = (function(self, opt){
         .attr("stroke-width", function(l) { return l.width; })
         .attr("style", function(l) { return "stroke: #" + (l.color || "999"); })
         .on("mouseenter", function(l){
+          var top = $(self.container).parent().scrollTop();//document.querySelector(self.container).scrollHeight;
           $(self.container + " img#hintImg")
-          .attr("style", "display: block; top: " + (d3.event.clientY) + "px; left: " + (d3.event.clientX) + "px;" )
+          .attr("style", "display: block; top: " + (d3.event.clientY + top) + "px; left: " + (d3.event.clientX) + "px;" )
           .attr("data-id", l.id);
         });
 
@@ -56,7 +66,6 @@ var d3_develop = (function(self, opt){
         .data(opt.nodes)
         .enter()
         .append("svg:image")
-        .attr("class", "circle")
         .attr("xlink:href", function(d){ return d.img; })
 
         .attr("width", function(d){ return getSize(d) })
